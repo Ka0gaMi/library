@@ -97,4 +97,154 @@ body {
   background-color: #a7f3d0;
   border-top: 5px solid #0f766e;
   border-radius: 10px;
+  font-size: 20px;
+  gap: 10px;
+  padding: 10px;
+}
+
+.book-card > p {
+  margin: 0;
+}
+
+.btn-div {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn {
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all ease-in-out;
+}
+
+.btn > img {
+  height: 2rem;
+}
+
+.btn.btn-remove {
+  background-color: red;
+  width: auto;
+  border-radius: 50%;
+}
+
+.btn#read-btn {
+  width: auto;
+  border-radius: 50%;
+}
+
+.btn#read-btn:hover {
+  outline: none;
+  border: none;
+  border-radius: 20px;
+}
+
+.btn#read-btn > span {
+  font-size: 1.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-right: 0 auto;
+  letter-spacing: 0.15rem;
+}
+
+.read {
+  background-color: green;
+}
+
+.not-read {
+  background-color: red;
+}
+
+/*
+  Adding overlay
+*/
+
+.overlay {
+  position: fixed;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  width: 100%;
+  top: 0;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/*
+  Styling form
+*/
+
+.add-book-form {
+  position: fixed;
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border-radius: 10px;
+  padding: 10px;
+  /* Centering the form */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20em;
+}
+
+.add-book-form > h3 {
+  margin: 10px 0 0 0;
+  font-size: 30px;
+}
+
+.input {
+  box-sizing: border-box;
+  width: 100%;
+  outline: none;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+input[type="text"] {
+  font-size: 15px;
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+.is-read > label {
+  font-size: 20px;
+  align-self: center;
+}
+
+.is-read {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.btn-submit {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 2px 5px 2px;
+  padding: 10px 20px 10px 20px;
+  font-size: 25px;
+  background-color: #a7f3d0;
+  border: none;
+  border-radius: 10px;
 }

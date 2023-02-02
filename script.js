@@ -86,8 +86,134 @@ function putBooksToGrid() {
     pagesP.textContent = "Pages: " + myLibrary[i].pages;
     bookDiv.appendChild(pagesP);
 
-    const readP = document.createElement("p");
-    readP.textContent = "Read: " + myLibrary[i].read;
-    bookDiv.appendChild(readP);
+    const img = document.createElement("img");
+    img.src = "./Photos/book-open.svg";
+    const readButtonSpan = document.createElement("span");
+
+    const buttonDiv = document.createElement("div");
+    buttonDiv.classList.add("btn-div");
+    const readButton = document.createElement("button");
+    readButton.classList.add("btn");
+    readButton.setAttribute("id", "read-btn");
+    readButton.appendChild(img);
+    readButton.appendChild(readButtonSpan);
+    const removeButton = document.createElement("button");
+    removeButton.classList.add("btn");
+    removeButton.classList.add("btn-remove");
+    removeButton.innerHTML = "<img src='./Photos/delete-empty.svg'>";
+
+    buttonDiv.appendChild(readButton);
+    buttonDiv.appendChild(removeButton);
+    bookDiv.appendChild(buttonDiv);
+
+    if (myLibrary[i].read === true) {
+      readButton.classList.add("read");
+    } else {
+      readButton.classList.add("not-read");
+    }
+
+    // Adding read button toggling //
+
+    readButton.addEventListener("click", () => {
+      if (readButton.classList.contains("not-read")) {
+        readButton.classList.replace("not-read", "read");
+        readButtonSpan.textContent = "Read";
+      } else {
+        readButton.classList.replace("read", "not-read");
+        readButtonSpan.textContent = "Not read";
+      }
+    });
+
+    // Adding remove button functionality //
+
+    removeButton.addEventListener("click", () => {
+      delete myLibrary[i];
+      bookGrid.removeChild(bookDiv);
+    });
+
+    // Adding typeText and deleteText functions //
+
+    function typeTextSpan(sentence) {
+      readButtonSpan.textContent = "";
+      const text = sentence;
+      const letters = text.split("");
+      let i = 0;
+      const typeNextLetter = () => {
+        readButtonSpan.textContent += letters[i];
+        i++;
+        if (i < letters.length) {
+          setTimeout(typeNextLetter, 30);
+        }
+      };
+      typeNextLetter();
+    }
+
+    function deleteTextSpan() {
+      const text = readButtonSpan.textContent;
+      const letters = text.split("");
+      const deleteNextLetter = () => {
+        letters.pop();
+        readButtonSpan.textContent = letters.join("");
+        if (letters.length > 0) {
+          setTimeout(deleteNextLetter, 10);
+        } else {
+          deleteSentenceRunning = false;
+        }
+      };
+      deleteNextLetter();
+    }
+
+    // Adding read button text animation //
+
+    readButton.addEventListener("mouseenter", (e) => {
+      if (readButton.classList.contains("not-read")) {
+        typeTextSpan("Not read");
+      } else {
+        typeTextSpan("Read", readButton);
+      }
+    });
+
+    readButton.addEventListener("mouseleave", (e) => {
+      deleteTextSpan();
+    });
   }
 }
+
+// Form structure //
+
+const addBookForm = document.querySelector(".add-book-form");
+const addBookBtn = document.querySelector(".add-btn");
+const overlay = document.querySelector(".overlay");
+
+const openAddBookForm = () => {
+  addBookForm.reset();
+  overlay.classList.add("active");
+};
+
+const closeAddBookForm = (e) => {
+  if (e.target === overlay) {
+    overlay.classList.remove("active");
+  }
+};
+
+addBookBtn.onclick = openAddBookForm;
+overlay.onclick = closeAddBookForm;
+
+// Form functionality //
+
+const getBookInput = () => {
+  const title = document.getElementById("title").value;
+  const author = document.getElementById("author").value;
+  const pages = document.getElementById("pages").value;
+  const isRead = document.getElementById("is-read").checked;
+  return [title, author, pages, isRead];
+};
+
+const createBookCard = (e) => {
+  e.preventDefault();
+  const bookInfo = getBookInput();
+  addBookToLibrary(...bookInfo);
+  closeAddBookForm({ target: overlay });
+};
+
+addBookForm.addEventListener("submit", createBookCard);

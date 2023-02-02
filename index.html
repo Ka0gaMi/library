@@ -35,7 +35,38 @@
         <span class="add-book"></span>
       </button>
     </div>
-
+    <div class="overlay">
+      <form class="add-book-form">
+        <h3>Add new book</h3>
+        <input
+          type="text"
+          class="input"
+          id="title"
+          placeholder="Title"
+          required
+        />
+        <input
+          type="text"
+          class="input"
+          id="author"
+          placeholder="Author"
+          required
+        />
+        <input
+          type="number"
+          id="pages"
+          class="input"
+          placeholder="Pages"
+          required
+          min="1"
+        />
+        <div class="is-read">
+          <label for="is-read">Have you read it?</label>
+          <input type="checkbox" class="checkbox" id="is-read" />
+        </div>
+        <button type="submit" class="btn-submit">Submit</button>
+      </form>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
