@@ -134,7 +134,7 @@ function putBooksToGrid() {
 
       confirmButton.addEventListener("click", (e) => {
         e.preventDefault();
-        delete myLibrary[i];
+        myLibrary.splice(i, 1);
         bookGrid.removeChild(bookDiv);
         closeRemoveOverlay();
       });
