@@ -248,3 +248,59 @@ input[type="checkbox"] {
   border: none;
   border-radius: 10px;
 }
+
+/*
+  Adding remove confirmation overlay
+*/
+
+.remove-overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+}
+
+.remove-confirmation {
+  position: fixed;
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border-radius: 10px;
+  padding: 10px;
+  /* Centering the form */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20em;
+}
+
+.remove-confirmation > h3 {
+  margin: 10px 0 0 0;
+  font-size: 30px;
+}
+
+.confirm-btn {
+  background-color: red;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 10px 20px 10px 20px;
+}
+
+.cancel-btn {
+  background-color: white;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 10px 20px 10px 20px;
+}
+
+.remove-overlay.active {
+  display: block;
+}

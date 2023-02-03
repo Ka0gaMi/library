@@ -127,8 +127,22 @@ function putBooksToGrid() {
     // Adding remove button functionality //
 
     removeButton.addEventListener("click", () => {
-      delete myLibrary[i];
-      bookGrid.removeChild(bookDiv);
+      openRemoveOverlay();
+
+      const confirmButton = document.querySelector(".confirm-btn");
+      const cancelButton = document.querySelector(".cancel-btn");
+
+      confirmButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        delete myLibrary[i];
+        bookGrid.removeChild(bookDiv);
+        closeRemoveOverlay();
+      });
+
+      cancelButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        closeRemoveOverlay();
+      });
     });
 
     // Adding typeText and deleteText functions //
@@ -217,3 +231,15 @@ const createBookCard = (e) => {
 };
 
 addBookForm.addEventListener("submit", createBookCard);
+
+// Adding remove overlay //
+
+const removeOverlay = document.querySelector(".remove-overlay");
+
+const closeRemoveOverlay = () => {
+  removeOverlay.classList.remove("active");
+};
+
+const openRemoveOverlay = () => {
+  removeOverlay.classList.add("active");
+};
