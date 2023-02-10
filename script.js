@@ -243,6 +243,16 @@ function putBooksToGrid() {
       const { bookTitle, bookAuthor, bookPages } = getBookData(i);
       putDataForEdit(bookTitle, bookAuthor, bookPages);
     });
+
+    // Adding edit button text animation //
+
+    editButton.addEventListener("mouseenter", (e) => {
+      typeTextSpan(editButtonSpan, "Edit");
+    });
+
+    editButton.addEventListener("mouseleave", (e) => {
+      deleteTextSpan(editButtonSpan);
+    });
   }
 }
 
