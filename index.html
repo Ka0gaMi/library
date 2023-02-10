@@ -76,6 +76,35 @@
         </div>
       </form>
     </div>
+    <div class="edit-overlay">
+      <form class="edit-form">
+        <input
+          type="text"
+          class="input"
+          id="book-title"
+          placeholder="Title"
+          required
+        />
+        <input
+          type="text"
+          class="input"
+          id="book-author"
+          placeholder="Author"
+          required
+        />
+        <input
+          type="number"
+          id="book-pages"
+          class="input"
+          placeholder="Pages"
+          required
+          min="1"
+        />
+        <button type="submit" class="btn-submit" id="edit-btn-submit">
+          Submit
+        </button>
+      </form>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>

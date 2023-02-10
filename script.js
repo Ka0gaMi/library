@@ -1,3 +1,26 @@
+let myLibrary = [];
+
+let currentEditingIndex = -1;
+
+// Edit form functionality //
+
+const getBookData = (index) => {
+  let bookTitle = myLibrary[index].title;
+  let bookAuthor = myLibrary[index].author;
+  let bookPages = myLibrary[index].pages;
+  return { bookTitle, bookAuthor, bookPages };
+};
+
+const putDataForEdit = (bookTitle, bookAuthor, bookPages) => {
+  const titleInput = document.getElementById("book-title");
+  const authorInput = document.getElementById("book-author");
+  const pagesInput = document.getElementById("book-pages");
+
+  titleInput.value = bookTitle;
+  authorInput.value = bookAuthor;
+  pagesInput.value = bookPages;
+};
+
 // Button functionality //
 
 let deleteSentenceRunning = false;
@@ -14,6 +37,8 @@ addBtn.addEventListener("mouseleave", (e) => {
   if (deleteSentenceRunning) return;
   deleteText();
 });
+
+// Add book button animation //
 
 function typeText() {
   if (deleteSentenceRunning) return;
@@ -51,13 +76,13 @@ function deleteText() {
 
 const bookGrid = document.getElementById("bookGrid");
 
-let myLibrary = [];
-
-function Book(title = "Unknown", author = "Unknown", pages = 0, read = false) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.read = read;
+class Book {
+  constructor(title = "Unknown", author = "Unknown", pages = 0, read = false) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
+  }
 }
 
 function addBookToLibrary(title, author, pages, read) {
@@ -86,24 +111,41 @@ function putBooksToGrid() {
     pagesP.textContent = "Pages: " + myLibrary[i].pages;
     bookDiv.appendChild(pagesP);
 
-    const img = document.createElement("img");
-    img.src = "./Photos/book-open.svg";
+    const readImg = document.createElement("img");
+    readImg.src = "./Photos/book-open.svg";
     const readButtonSpan = document.createElement("span");
 
     const buttonDiv = document.createElement("div");
     buttonDiv.classList.add("btn-div");
+
     const readButton = document.createElement("button");
     readButton.classList.add("btn");
     readButton.setAttribute("id", "read-btn");
-    readButton.appendChild(img);
+    readButton.appendChild(readImg);
     readButton.appendChild(readButtonSpan);
+
+    const removeEditDiv = document.createElement("div");
+    removeEditDiv.classList.add("remove-edit-div");
+
     const removeButton = document.createElement("button");
     removeButton.classList.add("btn");
     removeButton.classList.add("btn-remove");
     removeButton.innerHTML = "<img src='./Photos/delete-empty.svg'>";
 
+    const editImg = document.createElement("img");
+    editImg.src = "./Photos/book-edit.svg";
+    const editButtonSpan = document.createElement("span");
+
+    const editButton = document.createElement("button");
+    editButton.classList.add("btn");
+    editButton.setAttribute("id", "edit-btn");
+    editButton.appendChild(editImg);
+    editButton.appendChild(editButtonSpan);
+
     buttonDiv.appendChild(readButton);
-    buttonDiv.appendChild(removeButton);
+    buttonDiv.appendChild(removeEditDiv);
+    removeEditDiv.appendChild(removeButton);
+    removeEditDiv.appendChild(editButton);
     bookDiv.appendChild(buttonDiv);
 
     if (myLibrary[i].read === true) {
@@ -118,9 +160,11 @@ function putBooksToGrid() {
       if (readButton.classList.contains("not-read")) {
         readButton.classList.replace("not-read", "read");
         readButtonSpan.textContent = "Read";
+        myLibrary[i].read = true;
       } else {
         readButton.classList.replace("read", "not-read");
         readButtonSpan.textContent = "Not read";
+        myLibrary[i].read = false;
       }
     });
 
@@ -147,13 +191,13 @@ function putBooksToGrid() {
 
     // Adding typeText and deleteText functions //
 
-    function typeTextSpan(sentence) {
-      readButtonSpan.textContent = "";
+    function typeTextSpan(target, sentence) {
+      target.textContent = "";
       const text = sentence;
       const letters = text.split("");
       let i = 0;
       const typeNextLetter = () => {
-        readButtonSpan.textContent += letters[i];
+        target.textContent += letters[i];
         i++;
         if (i < letters.length) {
           setTimeout(typeNextLetter, 30);
@@ -162,12 +206,12 @@ function putBooksToGrid() {
       typeNextLetter();
     }
 
-    function deleteTextSpan() {
-      const text = readButtonSpan.textContent;
+    function deleteTextSpan(target) {
+      const text = target.textContent;
       const letters = text.split("");
       const deleteNextLetter = () => {
         letters.pop();
-        readButtonSpan.textContent = letters.join("");
+        target.textContent = letters.join("");
         if (letters.length > 0) {
           setTimeout(deleteNextLetter, 10);
         } else {
@@ -181,14 +225,23 @@ function putBooksToGrid() {
 
     readButton.addEventListener("mouseenter", (e) => {
       if (readButton.classList.contains("not-read")) {
-        typeTextSpan("Not read");
+        typeTextSpan(readButtonSpan, "Not read");
       } else {
-        typeTextSpan("Read", readButton);
+        typeTextSpan(readButtonSpan, "Read");
       }
     });
 
     readButton.addEventListener("mouseleave", (e) => {
-      deleteTextSpan();
+      deleteTextSpan(readButtonSpan);
+    });
+
+    // Adding edit button functionality //
+
+    editButton.addEventListener("click", (e) => {
+      currentEditingIndex = i;
+      openEditOverlay();
+      const { bookTitle, bookAuthor, bookPages } = getBookData(i);
+      putDataForEdit(bookTitle, bookAuthor, bookPages);
     });
   }
 }
@@ -215,20 +268,20 @@ overlay.onclick = closeAddBookForm;
 
 // Form functionality //
 
-const getBookInput = () => {
+function getBookInput() {
   const title = document.getElementById("title").value;
   const author = document.getElementById("author").value;
   const pages = document.getElementById("pages").value;
   const isRead = document.getElementById("is-read").checked;
   return [title, author, pages, isRead];
-};
+}
 
-const createBookCard = (e) => {
+function createBookCard(e) {
   e.preventDefault();
   const bookInfo = getBookInput();
   addBookToLibrary(...bookInfo);
   closeAddBookForm({ target: overlay });
-};
+}
 
 addBookForm.addEventListener("submit", createBookCard);
 
@@ -243,3 +296,34 @@ const closeRemoveOverlay = () => {
 const openRemoveOverlay = () => {
   removeOverlay.classList.add("active");
 };
+
+// Adding edit overlay //
+
+const editOverlay = document.querySelector(".edit-overlay");
+
+const openEditOverlay = () => {
+  editOverlay.classList.add("active");
+};
+
+const closeEditOverlay = () => {
+  editOverlay.classList.remove("active");
+};
+
+// Edit form functionality //
+
+const editSubmitButton = document.getElementById("edit-btn-submit");
+
+editSubmitButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  const index = currentEditingIndex;
+  const editTitle = document.getElementById("book-title");
+  const editAuthor = document.getElementById("book-author");
+  const editPages = document.getElementById("book-pages");
+
+  myLibrary[index].title = editTitle.value;
+  myLibrary[index].author = editAuthor.value;
+  myLibrary[index].pages = editPages.value;
+
+  closeEditOverlay();
+  putBooksToGrid();
+});
